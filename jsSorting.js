@@ -2,25 +2,24 @@
     'use strict';
     var assertEqualsErrorHandler, bubbleSort, bubbleSortOriginal, test, expected, swap;
 
-    Array.prototype.equals = Array.prototype.equals || function (array) {
-        // if the other array is a falsy value, return
-        if (!array) {
+    Array.prototype.equals = Array.prototype.equals ||
+    function (array) {
+        var i = 0,
+            l = this.length,
+            arLen = array.length;
+        if (!array || !Array.isArray(array)) {
             return false;
         }
-        // compare lengths - can save a lot of time
-        if (this.length != array.length) {
+        if (l != arLen) {
             return false;
         }
 
-        for (var i = 0, l = this.length; i < l; i++) {
-            // Check if we have nested arrays
+        for (; i < l; i +=1) {
             if (this[i] instanceof Array && array[i] instanceof Array) {
-                // recurse into the nested arrays
-                if (!this[i].equals(array[i]))
+                if (!this[i].equals(array[i])) {
                     return false;
-            }
-            else if (this[i] != array[i]) {
-                // Warning - two different object instances will never be equal: {x:20} != {x:20}
+                }
+            } else if (this[i] != array[i]) {
                 return false;
             }
         }
@@ -32,6 +31,7 @@
             isFinite(value) &&
             Math.floor(value) === value;
     };
+
     swap = function (arr, i1, i2) {
         var validNumbers = Number.isInteger(i1) && Number.isInteger(i2);
         if (validNumbers) {
@@ -60,13 +60,17 @@
             throw new Error("Failed asserting " + assertionOne + " is equal to " + assertionTwo + msg);
         }
     };
+
     bubbleSort = function bubbleSort(a) {
-        var swapped;
+        var swapped,
+            i,
+            temp,
+            arLen = a.length;
         do {
             swapped = false;
-            for (var i = 0; i < a.length - 1; i++) {
+            for (i = 0; i < arLen - 1; i += 1) {
                 if (a[i] > a[i + 1]) {
-                    var temp = a[i];
+                    temp = a[i];
                     a[i] = a[i + 1];
                     a[i + 1] = temp;
                     swapped = true;
@@ -75,6 +79,7 @@
         } while (swapped);
         return a;
     };
+
     bubbleSortOriginal = function bubbleSortOriginal(array) {
         // while wall > 0
         var wall = array.length; // first sorted element
